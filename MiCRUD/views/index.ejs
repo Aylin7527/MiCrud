@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+
+        body {
+            background: linear-gradient(to right, #8e44ad, #c0392b);
+            color: rgb(255, 7, 7);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #modalAgregar.fade .modal-dialog,
+        #modalEditar.fade .modal-dialog {
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            transform: translate(0, -50px);
+            opacity: 0;
+        }
+
+        #modalAgregar.show .modal-dialog,
+        #modalEditar.show .modal-dialog {
+            transform: translate(0, 0);
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: linear-gradient(to right, #e9cf26, #f87754); 
+            color: black; 
+            border-radius: 12px; 
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: #0d3aa4; 
+            color: white;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .modal-header .close {
+            color: white;
+            opacity: 1;
+        }
+        .modal-header .close:hover {
+            color: black;
+        }
+
+        .bg-primary {
+            background-color: #ce8037 !important;
+        }
+
+        .card {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-primary, .btn-agregar {
+            background-color: #1abc9c; 
+            border: none;
+            transition: 0.3s ease-in-out;
+            color: white;
+        }
+
+        .btn-primary:hover, .btn-agregar:hover {
+            background-color: #16a085; 
+            transform: scale(1.1);
+        }
+
+        .btn-secondary {
+            background-color: #bc2520; 
+            border: none;
+            transition: 0.3s ease-in-out;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e67e22;
+            transform: scale(1.1);
+        }
+
+        .navbar {
+            background: rgba(227, 0, 0, 0.3) !important;
+            backdrop-filter: blur(10px);
+        }
+
+        input, textarea {
+            background: rgba(255, 0, 0, 0.2);
+            border: none;
+            color: white;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            background: rgba(225, 2, 2, 0.3);
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #ffffff !important; 
+            box-shadow: 0px 4px 12px rgb(12, 53, 255);
+            border-radius: 12px;
+            background: rgba(255, 1, 1, 0.441);
+            backdrop-filter: blur(10px);
+        }
+
+        .table th, .table td {
+            color: #ffffff !important; 
+        }
+
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <a class="navbar-brand" href="#">Tienda Online VAE</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Inicio <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Producto
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Acciones</a>
+                        <a class="dropdown-item" href="#">Filtrado</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Tipo</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+        </div>
+    </nav>
+
+
+    <div class="container mt-4">
+        <a href="/create" class="btn btn-primary btn-lg mb-4 shadow" data-toggle="modal" data-target="#modalAgregar">
+            <i class="fa-solid fa-plus"></i> Agregar Producto
+        </a>
+    
+        <table class="table table-striped table-bordered shadow">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad en stock</th>
+                    <th scope="col">Categoría</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% let contador = 1; %>
+                <% results.forEach((productos) => { %>
+                    <tr>
+                        <th scope="row"><%= contador %></th>
+                        <td><%= productos.Nombre %></td>
+                        <td><%= productos.Descripcion %></td>
+                        <td>$<%= productos.Precio %></td>
+                        <td><%= productos.CantidadStock %></td>
+                        <td><%= productos.Categoria %></td>
+                        <td>
+                            <a href="/edit/<%= productos.ID %>" class="btn btn-info btn-sm mr-2">Editar</a>
+    
+                            <form action="/delete/<%= productos.ID %>" method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% contador++; %>
+                <% }); %>
+            </tbody>            
+        </table>            
+
+        <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content shadow">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="modalAgregarLabel">Agregar Producto</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/save" method="POST">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="nombre">Nombre del producto</label>
+                                <input type="text" class="form-control" name="nombre" id="Nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="descripcion">Descripción</label>
+                                <textarea class="form-control" name="descripcion" id="Descripcion" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="precio">Precio</label>
+                                <input type="number" class="form-control" name="precio" id="Precio" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cantidadStock">Cantidad en stock</label>
+                                <input type="number" class="form-control" name="cantidadStock" id="CantidadStock" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="categoria">Categoría</label>
+                                <input type="text" class="form-control" name="categoria" id="Categoria" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                                    <a href="/" class="btn btn-secondary">Cerrar</a>
+                                    <button type="/" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                    </form>                    
+                </div>
+            </div>
+        </div>
+    </div>    
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+        function redireccionar() {
+            window.location.href = "/"; 
+        }
+    </script>
+    
+</body>
+</html>
